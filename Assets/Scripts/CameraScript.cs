@@ -13,6 +13,7 @@ public class CameraScript : MonoBehaviour
     private float rotSensitivityY = 10f;
     private float rotAngleX, rotAngleX0;
     private float rotSensitivityX = 5f;
+    private float maxOffset = 10.0f;  // максимальна віддаль камери від поля (cameraAnchor)
     private float fpvRange = 1.5f;    // межа переходу FPV режиму
     private float fpvOffset = 0.01f;  // відстань до cameraAnchor в FPV режимі
     // private float minAngleX = 40f;
@@ -42,17 +43,17 @@ public class CameraScript : MonoBehaviour
         {
             // Наближення / віддалення
             Vector2 zoom = Input.mouseScrollDelta;
-            if (zoom.y > 0 && offset.magnitude > fpvRange)  // наближення - колесо крутилось "вперед"
+            if (zoom.y > 0 && offset.magnitude > fpvRange)        // наближення - колесо крутилось "вперед"
             {
                 offset *= 0.9f;
-                if (offset.magnitude < fpvRange)   // переходимо до FPV
+                if (offset.magnitude < fpvRange)                  // переходимо до FPV
                 {
                     offset *= fpvOffset / offset.magnitude;
                 }
             }
-            else if (zoom.y < 0)  // віддалення
+            else if (zoom.y < 0 && offset.magnitude < maxOffset)  // віддалення
             {
-                if (offset.magnitude < fpvRange)   // виходимо з FPV
+                if (offset.magnitude < fpvRange)                  // виходимо з FPV
                 {
                     offset *= fpvRange / offset.magnitude;
                 }
