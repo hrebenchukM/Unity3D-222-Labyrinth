@@ -30,6 +30,7 @@ public class CameraScript : MonoBehaviour
         lookAction = InputSystem.actions.FindAction("Look");
         rotAngleY = rotAngleY0 = transform.eulerAngles.y;
         rotAngleX = rotAngleX0 = transform.eulerAngles.x;
+        GameState.isFpv= offset.magnitude < fpvRange;
     }
 
     void Update()
@@ -49,6 +50,7 @@ public class CameraScript : MonoBehaviour
                 if (offset.magnitude < fpvRange)                  // переходимо до FPV
                 {
                     offset *= fpvOffset / offset.magnitude;
+                    GameState.isFpv = true;
                 }
             }
             else if (zoom.y < 0 && offset.magnitude < maxOffset)  // віддалення
@@ -56,6 +58,7 @@ public class CameraScript : MonoBehaviour
                 if (offset.magnitude < fpvRange)                  // виходимо з FPV
                 {
                     offset *= fpvRange / offset.magnitude;
+                    GameState.isFpv = false;
                 }
                 offset *= 1.1f;
             }

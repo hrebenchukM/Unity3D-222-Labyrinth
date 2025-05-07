@@ -3,41 +3,42 @@ using UnityEngine;
 
 public class LightsScript : MonoBehaviour
 {
-    private Light[] daylights;
-    private Light[] nightlights;
-    private bool isDay;
+    private Light[] dayLights;
+    private Light[] nightLights;
+    // public static bool isDay;
 
     void Start()
     {
-        daylights = GameObject
+        dayLights = GameObject
             .FindGameObjectsWithTag("Day")
             .Select(x => x.GetComponent<Light>())
             .ToArray();
-        nightlights = GameObject
-           .FindGameObjectsWithTag("Night")
-           .Select(x => x.GetComponent<Light>())
-           .ToArray();
-        isDay = true;
+        nightLights = GameObject
+            .FindGameObjectsWithTag("Night")
+            .Select(x => x.GetComponent<Light>())
+            .ToArray();
+        GameState.isDay = true;
         SetLights();
+        GameState.AddListener(OnGameStateChanged);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.N))
         {
-            isDay = !isDay;
-            SetLights();
+            GameState.isDay = !GameState.isDay;
         }
     }
+
     private void SetLights()
     {
-        if (isDay)
+        if (GameState.isDay)
         {
-            foreach(Light light in daylights)
+            foreach (Light light in dayLights)
             {
                 light.intensity = 1.0f;
             }
-            foreach (Light light in nightlights)
+            foreach (Light light in nightLights)
             {
                 light.intensity = 0.0f;
             }
@@ -46,16 +47,44 @@ public class LightsScript : MonoBehaviour
         }
         else
         {
-            foreach (Light light in daylights)
+            foreach (Light light in dayLights)
             {
                 light.intensity = 0.0f;
             }
-            foreach (Light light in nightlights)
+            if (!GameState.isFpv)
             {
-                light.intensity = 1.0f;
+                foreach (Light light in nightLights)
+                {
+                    light.intensity = 1.0f;
+                }
             }
-            RenderSettings.ambientIntensity= 0.0f;
+            RenderSettings.ambientIntensity = 0.0f;
             RenderSettings.reflectionIntensity = 0.0f;
         }
     }
+
+    private void OnGameStateChanged(string fieldName)
+    {
+        if (fieldName == nameof(GameState.isDay))
+        {
+            SetLights();
+        }
+        else if (fieldName == nameof(GameState.isFpv))
+        {
+            if (!GameState.isDay)
+            {
+                foreach (Light light in nightLights)
+                {
+                    light.intensity = GameState.isFpv ? 0.0f : 1.0f;
+                }
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.RemoveListener(OnGameStateChanged);
+    }
 }
+/* Управління освітленням - перемикання "день/ніч"
+ */
