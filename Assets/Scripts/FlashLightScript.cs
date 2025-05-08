@@ -43,7 +43,7 @@ public class FlashLightScript : MonoBehaviour
             charge += 1.0f;
             //Debug.Log("Charge:" + charge);
             ToasterScript.Toast(
-                 $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",2.0f
+                 $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",3.0f
             );
         }
     }

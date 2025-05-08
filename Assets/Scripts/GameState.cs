@@ -53,4 +53,21 @@ public class GameState
         }
     }
     #endregion
+
+
+    #region bool isKey1Collected
+    private static bool isKey1Collected = false;
+    public static bool IsKey1Collected
+    {
+        get => isKey1Collected;
+        set
+        {
+            if (isKey1Collected != value)
+            {
+                isKey1Collected = value;
+                Notify(nameof(IsKey1Collected));
+            }
+        }
+    }
+    #endregion
 }

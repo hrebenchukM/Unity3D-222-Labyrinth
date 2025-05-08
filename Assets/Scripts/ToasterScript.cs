@@ -1,38 +1,78 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ToasterScript : MonoBehaviour
 {
     private static ToasterScript instance;
     private GameObject content;
     private TMPro.TextMeshProUGUI text;
-    private float showTime = 3.0f;
-    private float timeount;
+    private CanvasGroup canvasGroup;
+    private float showTime = 3.0f; // час показу повідомлення
+    private float timeount;        // залишок часу
+    private readonly Queue<ToastMessage> messageQueue = new Queue<ToastMessage>();
     void Start()
     {
         instance = this;
         Transform t = this.transform.Find("Content");
         content= t.gameObject;
+        canvasGroup = content.GetComponent<CanvasGroup>();
         text = t.Find("Text").GetComponent<TMPro.TextMeshProUGUI>();
         content.SetActive(false);
+        GameState.AddListener(OnGameStateChanged);
     }
     void Update()
     {
-        if (timeount > 0) 
+        if (timeount > 0)
         {
-            Debug.Log(timeount);
+            canvasGroup.alpha = Mathf.Clamp01(timeount * 2.0f);
             timeount -= Time.deltaTime;
             if (timeount <= 0f)
-            { 
+            {
                 content.SetActive(false);
             }
 
         }
+        else if (messageQueue.Count > 0)
+        {
+
+            var message = messageQueue.Dequeue();
+            content.SetActive(true);
+            text.text = message.text;
+            timeount = message.time;
+        }
+
 
     }
+
+    private void OnGameStateChanged(string fieldName)
+    {
+        if (fieldName == nameof(GameState.IsKey1Collected))
+        {
+            Toast("Ви знайшли ключ %1. Можете відкрити сині двері. ");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.RemoveListener(OnGameStateChanged);
+    }
+
     public static void Toast (string message,float time = 0.0f)
     {
-        instance.content.SetActive(true);
-        instance.text.text = message;
-        instance.timeount = time == 0.0f ? instance.showTime : time;
+        //instance.content.SetActive(true);
+        //instance.text.text = message;
+        //instance.timeount = time == 0.0f ? instance.showTime : time;
+        instance.messageQueue.Enqueue(new ToastMessage
+        { 
+            text = message,
+            time = time == 0.0f ? instance.showTime : time
+        }
+        );
     }
+    private class ToastMessage
+    {
+        public string text { get; set; }
+        public float time { get; set; }
+    }
+
 }
