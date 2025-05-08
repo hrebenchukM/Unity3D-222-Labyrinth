@@ -27,12 +27,24 @@ public class FlashLightScript : MonoBehaviour
 
         if (isActive)
         {
-            charge = Mathf.Clamp01(charge-Time.deltaTime/chargeLifeTime);
+            charge = charge <0 ? 0.0f : charge -Time.deltaTime/chargeLifeTime;
             _light.intensity = charge;
         }
         else
         {
             _light.intensity = 0.0f;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Battery")) 
+        {
+            GameObject.Destroy(other.gameObject);
+            charge += 1.0f;
+            //Debug.Log("Charge:" + charge);
+            ToasterScript.Toast(
+                 $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",2.0f
+            );
         }
     }
 }
