@@ -50,6 +50,14 @@ public class ToasterScript : MonoBehaviour
         {
             Toast("Ви знайшли ключ %1. Можете відкрити сині двері. ");
         }
+        if (fieldName == nameof(GameState.IsKey2Collected))
+        {
+            Toast("Ви знайшли ключ %2. Можете відкрити чорні двері. ");
+        }
+        if (fieldName == nameof(GameState.IsKey3Collected))
+        {
+            Toast("Ви знайшли ключ %3. Можете відкрити зелені двері. ");
+        }
     }
 
     private void OnDestroy()

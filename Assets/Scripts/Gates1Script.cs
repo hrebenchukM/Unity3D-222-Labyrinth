@@ -2,14 +2,17 @@ using UnityEngine;
 
 public class Gates1Script : MonoBehaviour
 {
-    private float size = 0.8f;
-    private float openingTime = 3.0f;
-    private Vector3 openingDirection;
+    [SerializeField] private Vector3 openingDirection;
+    [SerializeField] private float size = 0.65f;
+    [SerializeField] private int keyNumber = 1;
+    private float openingTime;
+    private float openingTime1 = 2.0f; //in time
+    private float openingTime2 = 8.0f;//out of time
+    
     private bool isKeyInserted;
     void Start()
     {
         isKeyInserted = false;
-        openingDirection = Vector3.forward;
     }
 
     void Update()
@@ -24,15 +27,26 @@ public class Gates1Script : MonoBehaviour
     {
         //Debug.Log(collision.gameObject.name);
         if (collision.gameObject.name == "Player") 
-        { 
-            if(GameState.IsKey1Collected)
+        {
+
+            bool isKeyCollected = (bool)
+                   GameState.GetProperty($"IsKey{keyNumber}Collected");
+
+            if (isKeyCollected)
             {
-                ToasterScript.Toast("ƒвер≥ в≥дчин€ютьс€...");
-                isKeyInserted=true;
+                if (!isKeyInserted)
+                {
+                    ToasterScript.Toast("ƒвер≥ в≥дчин€ютьс€...");
+                    bool isInTime = (bool)
+                         GameState.GetProperty($"IsKey{keyNumber}InTime");
+                    openingTime = isInTime ? openingTime1 : openingTime2;
+                    isKeyInserted = true;
+                }
+
             }
             else
             {
-                ToasterScript.Toast("ƒвер≥ зачинен≥(ха-ха-ха).Ўукай син≥й ключ!");
+                ToasterScript.Toast($"ƒвер≥ зачинен≥(ха-ха-ха).Ўукай  ключ {keyNumber} !");
             }
 
         }
