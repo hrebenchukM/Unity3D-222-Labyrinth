@@ -5,7 +5,17 @@ public class FlashLightScript : MonoBehaviour
     private GameObject player;
     private Light _light;
     private float charge;
-    private float chargeLifeTime=10.0f;
+    private float chargeLifeTime = 10.0f;
+
+    /* Д.З. Реалізувати можливість зміни кута свічення 
+     * ліхтарика за допомогою клавіатури / миші (на вибір)
+     * у певних межах змін (підібрати практично)
+     */
+    public float minSpotAngle = 10.0f;
+    public float maxSpotAngle = 90.0f;
+    public float spotAngleStep = 5.0f;
+
+
     private bool isActive => !GameState.isDay && GameState.isFpv;
     void Start()
     {
@@ -16,6 +26,9 @@ public class FlashLightScript : MonoBehaviour
         }
         _light = this.GetComponent<Light>();
         charge = 1.0f;
+        ////////////////////////////////////////////////////////////////////////////
+        _light.spotAngle = Mathf.Clamp(_light.spotAngle, minSpotAngle, maxSpotAngle);
+        ////////////////////////////////////////////////////////////////////////////
     }
 
  
@@ -29,6 +42,22 @@ public class FlashLightScript : MonoBehaviour
         {
             charge = charge <0 ? 0.0f : charge -Time.deltaTime/chargeLifeTime;
             _light.intensity = charge;
+
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+            if (Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.KeypadPlus))
+            {
+                _light.spotAngle = Mathf.Clamp(_light.spotAngle + spotAngleStep, minSpotAngle, maxSpotAngle);
+            }
+            if (Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                _light.spotAngle = Mathf.Clamp(_light.spotAngle - spotAngleStep, minSpotAngle, maxSpotAngle);
+            }
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+
         }
         else
         {
