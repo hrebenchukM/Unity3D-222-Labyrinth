@@ -35,7 +35,7 @@ public class PlayerScript : MonoBehaviour
         Vector3 cameraRight = Camera.main.transform.right;   // корегування не потребує
         // оскільки завжди має бути горизонтальним
 
-        rb.AddForce(moveValue.x * cameraRight + moveValue.y * cameraForward);
+        rb.AddForce((moveValue.x * cameraRight + moveValue.y * cameraForward) * 10f);
     }
 }
 /* Скрипт управління персонажем.

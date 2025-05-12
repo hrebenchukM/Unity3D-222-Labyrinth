@@ -6,8 +6,8 @@ public class Gates1Script : MonoBehaviour
     [SerializeField] private float size = 0.65f;
     [SerializeField] private int keyNumber = 1;
     private float openingTime;
-    private float openingTime1 = 2.0f; //in time
-    private float openingTime2 = 8.0f;//out of time
+    private float openingTime1 = 0.5f; //in time
+    private float openingTime2 = 4.0f;//out of time
     
     private bool isKeyInserted;
     void Start()
@@ -17,11 +17,11 @@ public class Gates1Script : MonoBehaviour
 
     void Update()
     {
-        if (isKeyInserted && transform.localPosition.magnitude <size)
-        { 
-           transform.Translate(size * Time.deltaTime / openingTime * openingDirection);
+      
+        if (isKeyInserted && transform.localPosition.magnitude < size)
+        {
+            transform.Translate(size * Time.deltaTime / openingTime * openingDirection);
         }
-
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -41,6 +41,10 @@ public class Gates1Script : MonoBehaviour
                          GameState.GetProperty($"IsKey{keyNumber}InTime");
                     openingTime = isInTime ? openingTime1 : openingTime2;
                     isKeyInserted = true;
+                    Debug.Log("Speed: " + size / openingTime);
+
+                    GameState.LastOpenedGateNumber = keyNumber;
+
                 }
 
             }

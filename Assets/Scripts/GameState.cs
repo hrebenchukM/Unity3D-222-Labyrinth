@@ -78,18 +78,20 @@ public class GameState : MonoBehaviour
 
     #region bool isKey1InTime
     private static bool isKey1InTime = false;
+
     public static bool IsKey1InTime
     {
         get => isKey1InTime;
         set
         {
-            if (isKey1Collected != value)
+            if (isKey1InTime != value)
             {
-                isKey1Collected = value;
+                isKey1InTime = value;   
                 Notify(nameof(IsKey1InTime));
             }
         }
     }
+
     #endregion
 
     #region bool isKey2InTime
@@ -99,9 +101,9 @@ public class GameState : MonoBehaviour
         get => isKey2InTime;
         set
         {
-            if (isKey2Collected != value)
+            if (isKey2InTime != value)
             {
-                isKey2Collected = value;
+                isKey2InTime = value;
                 Notify(nameof(IsKey2InTime));
             }
         }
@@ -138,9 +140,9 @@ public class GameState : MonoBehaviour
         get => isKey3InTime;
         set
         {
-            if (isKey3Collected != value)
+            if (isKey3InTime != value)
             {
-                isKey3Collected = value;
+                isKey3InTime = value;
                 Notify(nameof(IsKey3InTime));
             }
         }
@@ -166,6 +168,21 @@ public class GameState : MonoBehaviour
     #endregion
 
 
+    #region int lastOpenedGateNumber
+    private static int lastOpenedGateNumber = 0;
+    public static int LastOpenedGateNumber
+    {
+        get => lastOpenedGateNumber;
+        set
+        {
+            if (lastOpenedGateNumber != value)
+            {
+                lastOpenedGateNumber = value;
+                Notify(nameof(LastOpenedGateNumber));
+            }
+        }
+    }
+    #endregion
 
     public static object GetProperty(string propertyName)
     {

@@ -8,18 +8,28 @@ public class Key1Script : MonoBehaviour
     private GameObject content;
     private Image timeoutImage;
     private float timeLeft;
-   
+
+
+    private bool timerActive = false;
+
     void Start()
     {
         content = transform.Find("Content").gameObject;
         timeoutImage = transform.Find("Indicator/Canvas/Foreground").GetComponent<Image>();
         timeoutImage.fillAmount = 1.0f;
         timeLeft = timeout;
+
+
     }
 
     void Update()
     {
-        if (timeLeft > 0)
+        if (!timerActive && GameState.LastOpenedGateNumber == keyNumber - 1)
+        {
+            timerActive = true;
+        }
+
+        if (timerActive && timeLeft > 0)
         {
             timeLeft -= Time.deltaTime;
             timeoutImage.fillAmount = Mathf.Clamp01(timeLeft/timeout);
