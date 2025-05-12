@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class ToasterScript : MonoBehaviour
@@ -20,6 +21,7 @@ public class ToasterScript : MonoBehaviour
         text = t.Find("Text").GetComponent<TMPro.TextMeshProUGUI>();
         content.SetActive(false);
         GameState.AddListener(OnGameStateChanged);
+        GameEventSystem.Subscribe(OnGameEvent);
     }
     void Update()
     {
@@ -60,23 +62,26 @@ public class ToasterScript : MonoBehaviour
 
     private void OnGameStateChanged(string fieldName)
     {
-        if (fieldName == nameof(GameState.IsKey1Collected))
+        if (fieldName == nameof(GameState.isDay))
         {
-            Toast("Ви знайшли ключ %1. Можете відкрити сині двері. ");
+            Toast(GameState.isDay
+                ?"Настав день"
+                :"Настала ніч");
         }
-        if (fieldName == nameof(GameState.IsKey2Collected))
+       
+    }
+    private void OnGameEvent(GameEvent gameEvent)
+    {
+        if (gameEvent.toast != null)
         {
-            Toast("Ви знайшли ключ %2. Можете відкрити чорні двері. ");
-        }
-        if (fieldName == nameof(GameState.IsKey3Collected))
-        {
-            Toast("Ви знайшли ключ %3. Можете відкрити зелені двері. ");
+          Toast(gameEvent.toast);
         }
     }
 
     private void OnDestroy()
     {
         GameState.RemoveListener(OnGameStateChanged);
+        GameEventSystem.UnSubscribe(OnGameEvent);
     }
 
     public static void Toast (string message,float time = 0.0f)
