@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ToasterScript : MonoBehaviour
@@ -24,7 +25,20 @@ public class ToasterScript : MonoBehaviour
     {
         if (timeount > 0)
         {
-            canvasGroup.alpha = Mathf.Clamp01(timeount * 2.0f);
+            if (timeount > (showTime - 1.0f)) 
+            {
+                canvasGroup.alpha = Mathf.Clamp01((showTime - timeount) / 0.5f);
+            }
+            else if (timeount > 0.5f)
+            {
+                canvasGroup.alpha = 1.0f;
+            }
+            else
+            {
+                canvasGroup.alpha = Mathf.Clamp01(timeount / 0.5f);
+            }
+
+
             timeount -= Time.deltaTime;
             if (timeount <= 0f)
             {
