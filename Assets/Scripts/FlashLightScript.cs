@@ -11,9 +11,9 @@ public class FlashLightScript : MonoBehaviour
      * ліхтарика за допомогою клавіатури / миші (на вибір)
      * у певних межах змін (підібрати практично)
      */
-    public float minSpotAngle = 10.0f;
-    public float maxSpotAngle = 90.0f;
-    public float spotAngleStep = 5.0f;
+    private float minSpotAngle = 10.0f;
+    private float maxSpotAngle = 90.0f;
+    private float spotAngleStep = 5.0f;
 
 
     private bool isActive => !GameState.isDay && GameState.isFpv;
@@ -68,8 +68,13 @@ public class FlashLightScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Battery")) 
         {
+            BatteryScript battery = other.gameObject.GetComponent<BatteryScript>();
+
             GameObject.Destroy(other.gameObject);
-            charge += 1.0f;
+            //charge += 1.0f;
+            charge = Mathf.Min(charge + battery.GetChargeAmount, 1.0f);
+            Debug.Log($"Added: {battery.GetChargeAmount}, Charge: {charge}");
+
             //Debug.Log("Charge:" + charge);
             ToasterScript.Toast(
                  $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",3.0f
