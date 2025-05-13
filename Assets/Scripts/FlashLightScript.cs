@@ -70,15 +70,23 @@ public class FlashLightScript : MonoBehaviour
         {
             BatteryScript battery = other.gameObject.GetComponent<BatteryScript>();
 
-            GameObject.Destroy(other.gameObject);
+          
             //charge += 1.0f;
             charge = Mathf.Min(charge + battery.GetChargeAmount, 1.0f);
-            Debug.Log($"Added: {battery.GetChargeAmount}, Charge: {charge}");
+            //Debug.Log($"Added: {battery.GetChargeAmount}, Charge: {charge}");
 
             //Debug.Log("Charge:" + charge);
-            ToasterScript.Toast(
-                 $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",3.0f
-            );
+            GameEventSystem.EmitEvent(new GameEvent
+            {
+                type = "Battery",
+                toast = $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",
+                sound = EffectsSounds.batteryCollected,
+
+            });
+            GameObject.Destroy(other.gameObject);
+            //ToasterScript.Toast(
+            //     $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",3.0f
+            //);
         }
     }
 }

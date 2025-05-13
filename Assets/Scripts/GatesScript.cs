@@ -6,23 +6,34 @@ public class GatesScript : MonoBehaviour
     [SerializeField] private float size = 0.65f;
     [SerializeField] private int keyNumber = 1;
     private float openingTime;
-    private float openingTime1 = 0.5f; //in time
-    private float openingTime2 = 4.0f;//out of time
+    private float openingTime1 = 3.0f; //in time
+    private float openingTime2 = 10.0f;//out of time
     private bool isKeyCollected;
     private bool isKeyInTime;
     private bool isKeyInserted;
+    private AudioSource openingSound1;  
+    private AudioSource openingSound2;
     void Start()
     {
         isKeyInserted = false;
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        if (audioSources.Length > 0 ) { openingSound1 = audioSources[0]; }
+        if (audioSources.Length > 1 ) { openingSound2 = audioSources[1]; }
+      
         GameEventSystem.Subscribe(OnGameEvent);
+
     }
 
     void Update()
     {
-
         if (isKeyInserted && transform.localPosition.magnitude < size)
         {
             transform.Translate(size * Time.deltaTime / openingTime * openingDirection);
+            if (transform.localPosition.magnitude >= size)
+            {
+                if(openingSound1 != null && openingSound1.isPlaying) { openingSound1.Stop(); }
+                if(openingSound2 != null && openingSound2.isPlaying) { openingSound2.Stop(); }
+            }
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -50,8 +61,9 @@ public class GatesScript : MonoBehaviour
                     {
                         type = $"Gate{keyNumber}Opening",
                         payLoad = openingTime,
-                        toast = "ƒвер≥ в≥дчин€ютьс€..."
+                        toast = "ƒвер≥ в≥дчин€ютьс€...",
                     });
+                    (isKeyInTime? openingSound1 : openingSound2).Play();
 
                 }
 

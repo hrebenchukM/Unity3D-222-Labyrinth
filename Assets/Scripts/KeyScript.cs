@@ -59,7 +59,10 @@ public class KeyScript : MonoBehaviour
             {
                 type = $"IsKey{keyNumber}Collected",
                 payLoad = isKeyInTime,
-                toast = $"Ви знайшли ключ %{keyNumber}. Можете відкрити {gatesDescription} двері. "
+                toast = $"Ви знайшли ключ %{keyNumber}. Можете відкрити {gatesDescription} двері. ",
+                sound = isKeyInTime
+                ?EffectsSounds.keyCollectedInTime 
+                :EffectsSounds.keyCollectedOutOfTime,
             });
             Destroy(this.gameObject);
         }
