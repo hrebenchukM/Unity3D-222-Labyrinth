@@ -16,10 +16,19 @@ public class CameraScript : MonoBehaviour
     private float maxOffset = 10.0f;  // максимальна віддаль камери від поля (cameraAnchor)
     private float fpvRange = 1.5f;    // межа переходу FPV режиму
     private float fpvOffset = 0.01f;  // відстань до cameraAnchor в FPV режимі
-    // private float minAngleX = 40f;
-    // private float maxAngleX = 90f;
-    // private float minAngleFpvX = -10f;
-    // private float maxAngleFpvX = 40f;
+
+    private float minAngleX = 40f;
+    private float maxAngleX = 90f;
+    private float minAngleFpvX = -10f;
+    private float maxAngleFpvX = 40f;
+
+    private float minAngleY = -90f;
+    private float maxAngleY = 90f;
+    private float minAngleFpvY = -60f;
+    private float maxAngleFpvY = 60f;
+
+
+
 
     public static bool isFixed = false;
     public static Transform fixedTransform = null;
@@ -69,6 +78,17 @@ public class CameraScript : MonoBehaviour
             rotAngleY += rotSensitivityY * lookValue.x;
             rotAngleX -= rotSensitivityX * lookValue.y;
 
+            if (GameState.isFpv)
+            {
+                rotAngleX = Mathf.Clamp(rotAngleX, minAngleFpvX, maxAngleFpvX);
+                rotAngleY = Mathf.Clamp(rotAngleY, minAngleFpvY, maxAngleFpvY);
+            }
+            else
+            {
+                rotAngleX = Mathf.Clamp(rotAngleX, minAngleX, maxAngleX);
+                rotAngleY = Mathf.Clamp(rotAngleY, minAngleY, maxAngleY);
+            }
+
             transform.eulerAngles = new Vector3(rotAngleX, rotAngleY, 0f);  // самого лише
             // обертання камери недостатньо, оскільки вона губить персонажа з 
             // поля зору через наявність зміщення offset -- його теж треба 
@@ -84,11 +104,4 @@ public class CameraScript : MonoBehaviour
 /* Управління камерою.
  * Основа - положення персонажа, а також
  * рухи миші, які обертають камеру.
- */
-/* Д.З. Підібрати граничні кути для повороту камери 
- * по вертикалі
- * - не бачить горизонт
- * - не випускає персонаж з поля зору
- * Впровадити обмеження на обертання згідно з визначеними
- * граничними кутами.
  */
