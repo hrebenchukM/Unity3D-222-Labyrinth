@@ -35,8 +35,39 @@ public class PlayerScript : MonoBehaviour
         Vector3 cameraRight = Camera.main.transform.right;   // корегування не потребує
         // оскільки завжди має бути горизонтальним
 
-        rb.AddForce((moveValue.x * cameraRight + moveValue.y * cameraForward) * 10f);
+        rb.AddForce(Time.timeScale *
+            (moveValue.x * cameraRight + moveValue.y * cameraForward) 
+            * 10f);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Battery")) 
+        {
+            BatteryScript battery = other.gameObject.GetComponent<BatteryScript>();
+
+            float amount = battery.GetChargeAmount;
+
+            //charge += 1.0f;
+            //charge = Mathf.Min(charge + battery.GetChargeAmount, 1.0f);
+            //Debug.Log($"Added: {battery.GetChargeAmount}, Charge: {charge}");
+
+            //Debug.Log("Charge:" + charge);
+            GameEventSystem.EmitEvent(new GameEvent
+            {
+                type = "Battery",
+                payLoad = amount,
+                toast = $"Ви знайшли батарейку. Заряд ліхтарика поповнено на {amount:F1}",
+                sound = EffectsSounds.batteryCollected,
+
+            });
+            GameObject.Destroy(other.gameObject);
+            //ToasterScript.Toast(
+            //     $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",3.0f
+            //);
+        }
+    }
+
 }
 /* Скрипт управління персонажем.
  * Базується на фізиці прикладання сили до 

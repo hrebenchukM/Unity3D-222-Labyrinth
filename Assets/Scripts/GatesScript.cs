@@ -35,6 +35,13 @@ public class GatesScript : MonoBehaviour
                 if(openingSound2 != null && openingSound2.isPlaying) { openingSound2.Stop(); }
             }
         }
+
+        if (openingSound1.isPlaying || openingSound2.isPlaying)
+        {
+            openingSound1.volume = openingSound2.volume =
+            Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+        }
+
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -63,7 +70,19 @@ public class GatesScript : MonoBehaviour
                         payLoad = openingTime,
                         toast = "ƒвер≥ в≥дчин€ютьс€...",
                     });
-                    (isKeyInTime? openingSound1 : openingSound2).Play();
+
+                    if (openingSound1 != null && openingSound2 != null)
+                    {
+                        (isKeyInTime ? openingSound1 : openingSound2).Play();
+                    }
+                    else if (openingSound1 != null)
+                    {
+                        openingSound1.Play();
+                    }
+                    else if (openingSound2 != null)
+                    { 
+                         openingSound2.Play();
+                    }
 
                 }
 

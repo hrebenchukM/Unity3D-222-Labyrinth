@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class FlashLightScript : MonoBehaviour
@@ -29,6 +30,7 @@ public class FlashLightScript : MonoBehaviour
         ////////////////////////////////////////////////////////////////////////////
         _light.spotAngle = Mathf.Clamp(_light.spotAngle, minSpotAngle, maxSpotAngle);
         ////////////////////////////////////////////////////////////////////////////
+        GameEventSystem.Subscribe(OnGameEvent);
     }
 
  
@@ -64,29 +66,19 @@ public class FlashLightScript : MonoBehaviour
             _light.intensity = 0.0f;
         }
     }
-    private void OnTriggerEnter(Collider other)
+  
+
+    private void OnGameEvent(GameEvent gameEvent)
     {
-        if (other.gameObject.CompareTag("Battery")) 
+        if (gameEvent.type == "Battery")
         {
-            BatteryScript battery = other.gameObject.GetComponent<BatteryScript>();
-
-          
-            //charge += 1.0f;
-            charge = Mathf.Min(charge + battery.GetChargeAmount, 1.0f);
-            //Debug.Log($"Added: {battery.GetChargeAmount}, Charge: {charge}");
-
-            //Debug.Log("Charge:" + charge);
-            GameEventSystem.EmitEvent(new GameEvent
-            {
-                type = "Battery",
-                toast = $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",
-                sound = EffectsSounds.batteryCollected,
-
-            });
-            GameObject.Destroy(other.gameObject);
-            //ToasterScript.Toast(
-            //     $"Ви знайшли батарейку. Заряд ліхтарика поповнено до {charge:F1}",3.0f
-            //);
+            charge = Mathf.Min(charge + (float)gameEvent.payLoad, 1.0f);
+            _light.intensity = charge;
+            Debug.Log($"Added: {(float)gameEvent.payLoad}, Charge: {charge}");
         }
+    }
+    private void OnDestroy()
+    {
+        GameEventSystem.UnSubscribe(OnGameEvent);
     }
 }
