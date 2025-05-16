@@ -22,6 +22,9 @@ public class GatesScript : MonoBehaviour
       
         GameEventSystem.Subscribe(OnGameEvent);
 
+        GameState.AddListener(OnGameStateChanged);
+
+
     }
 
     void Update()
@@ -36,7 +39,7 @@ public class GatesScript : MonoBehaviour
             }
         }
 
-        if (openingSound1.isPlaying || openingSound2.isPlaying)
+        if (openingSound1 != null && openingSound1.isPlaying || openingSound2 != null && openingSound2.isPlaying)
         {
             openingSound1.volume = openingSound2.volume =
             Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
@@ -95,6 +98,23 @@ public class GatesScript : MonoBehaviour
         }
 
     }
+
+    private void OnGameStateChanged(string fieldName)
+    {
+        if (fieldName == nameof(GameState.effectsVolume))
+        {
+            if (openingSound1 != null)
+            { 
+                openingSound1.volume = GameState.effectsVolume;
+            }
+            if (openingSound2 != null)
+            {
+                openingSound2.volume = GameState.effectsVolume;
+            }
+
+        }
+
+    }
     private void OnGameEvent(GameEvent gameEvent)
     {
         if(gameEvent.type == $"IsKey{keyNumber}Collected")
@@ -106,5 +126,8 @@ public class GatesScript : MonoBehaviour
     private void OnDestroy()
     {
         GameEventSystem.UnSubscribe(OnGameEvent);
+
+        GameState.RemoveListener(OnGameStateChanged);
+
     }
 }
