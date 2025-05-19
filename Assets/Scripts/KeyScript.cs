@@ -53,6 +53,7 @@ public class KeyScript : MonoBehaviour
         //Debug.Log(other.name);
         if (other.name == "Player")
         {
+            GameState.bag.Add($"Key{keyNumber}Collected",1);
             //GameState.SetProperty($"IsKey{keyNumber}Collected", true);
             //GameState.IsKey1Collected = true;
             GameEventSystem.EmitEvent(new GameEvent

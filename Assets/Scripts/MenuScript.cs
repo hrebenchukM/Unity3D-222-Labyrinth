@@ -1,8 +1,12 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
+    [SerializeField] private Image[] bagImages;
+    private TMPro.TextMeshProUGUI _batteryCountText;
+
     private GameObject content;
     private Slider musicSlider;
     private Slider effectsSlider;
@@ -20,7 +24,7 @@ public class MenuScript : MonoBehaviour
         musicSlider = transform.Find("Content/Sounds/MusicSlider").GetComponent<Slider>();
         effectsSlider = transform.Find("Content/Sounds/EffectsSlider").GetComponent<Slider>();
         muteToggle = transform.Find("Content/Sounds/MuteToggle").GetComponent<Toggle>();
-
+        _batteryCountText = transform.Find("Content/BatteryImage/Title").GetComponent<TMPro.TextMeshProUGUI>();
         defaultIsMuted = muteToggle.isOn;
 
         LoadPreferences();
@@ -79,6 +83,23 @@ public class MenuScript : MonoBehaviour
     {
         content.SetActive(true);
         Time.timeScale = 0.0f;
+        int count = 0;
+        if (GameState.bag.ContainsKey("BatteryCollected"))
+            count = GameState.bag["BatteryCollected"];
+        _batteryCountText.text = $"{count}";
+
+        for (int i = 0; i < bagImages.Length; i++) 
+        {
+            if (GameState.bag.ContainsKey($"Key{i + 1}Collected"))
+            {
+                bagImages[i].enabled = true;
+            }
+            else 
+            {
+                bagImages[i].enabled = false;
+            }
+          
+        }
     }
 
     public void OnExitClick()

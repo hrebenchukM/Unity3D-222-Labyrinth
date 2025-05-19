@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
+    public static int batteryCount = 0;
 
     void Start()
     {
@@ -53,6 +55,15 @@ public class PlayerScript : MonoBehaviour
             //Debug.Log($"Added: {battery.GetChargeAmount}, Charge: {charge}");
 
             //Debug.Log("Charge:" + charge);
+
+            if (GameState.bag.ContainsKey("BatteryCollected"))
+            {
+                GameState.bag["BatteryCollected"] += 1;
+            }
+            else
+            {
+                GameState.bag["BatteryCollected"] = 1;
+            }
             GameEventSystem.EmitEvent(new GameEvent
             {
                 type = "Battery",
