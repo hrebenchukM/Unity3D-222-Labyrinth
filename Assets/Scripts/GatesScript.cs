@@ -41,8 +41,12 @@ public class GatesScript : MonoBehaviour
 
         if (openingSound1 != null && openingSound1.isPlaying || openingSound2 != null && openingSound2.isPlaying)
         {
-            openingSound1.volume = openingSound2.volume =
-            Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+            if (openingSound1 != null) openingSound1.volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+            if (openingSound2 != null) openingSound2.volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+
+            //openingSound1.volume = openingSound2.volume =
+            //    Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume
+            //;
         }
 
     }
@@ -74,15 +78,15 @@ public class GatesScript : MonoBehaviour
                         toast = "ƒвер≥ в≥дчин€ютьс€...",
                     });
 
-                    if (openingSound1 != null && openingSound2 != null)
+                    if (openingSound1 != null && openingSound2 != null && openingSound1.enabled && openingSound2.enabled)
                     {
                         (isKeyInTime ? openingSound1 : openingSound2).Play();
                     }
-                    else if (openingSound1 != null)
+                    else if (openingSound1 != null && openingSound1.enabled)
                     {
                         openingSound1.Play();
                     }
-                    else if (openingSound2 != null)
+                    else if (openingSound2 != null && openingSound2.enabled)
                     { 
                          openingSound2.Play();
                     }
