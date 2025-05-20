@@ -12,6 +12,8 @@ public class ToasterScript : MonoBehaviour
     private float showTime = 3.0f; // час показу повідомлення
     private float timeount;        // залишок часу
     private readonly Queue<ToastMessage> messageQueue = new Queue<ToastMessage>();
+
+    private float deltaTime = 0f;
     void Start()
     {
         instance = this;
@@ -22,26 +24,39 @@ public class ToasterScript : MonoBehaviour
         content.SetActive(false);
         GameState.AddListener(OnGameStateChanged);
         GameEventSystem.Subscribe(OnGameEvent);
+
+        Debug.Log($"FPS:{Application.targetFrameRate},vSync:{QualitySettings.vSyncCount}, SFR:{Screen.currentResolution.refreshRateRatio}");
     }
     void Update()
     {
-        if (timeount > 0)
+        if (deltaTime == 0f && Time.deltaTime != 0f)
         {
-            if (timeount > (showTime - 1.0f)) 
-            {
-                canvasGroup.alpha = Mathf.Clamp01((showTime - timeount) / 0.5f);
-            }
-            else if (timeount > 0.5f)
-            {
-                canvasGroup.alpha = 1.0f;
-            }
-            else
-            {
-                canvasGroup.alpha = Mathf.Clamp01(timeount / 0.5f);
-            }
-
-
-            timeount -= Time.deltaTime;
+            deltaTime = Time.deltaTime;
+        }
+        if (timeount > 0f)
+        {
+            //if (timeount > (showTime - 1.0f)) 
+            //{
+            //    canvasGroup.alpha = Mathf.Clamp01((showTime - timeount) / 0.5f);
+            //}
+            //else if (timeount > 0.5f)
+            //{
+            //    canvasGroup.alpha = 1.0f;
+            //}
+            //else
+            //{
+            //    canvasGroup.alpha = Mathf.Clamp01(timeount / 0.5f);
+            //}
+            canvasGroup.alpha = Mathf.Clamp01(timeount * 2.0f);
+            //timeount -= Time.deltaTime;
+            float dt = Time.timeScale > 0.0f ? Time.deltaTime
+                : this.deltaTime > 0f ? this.deltaTime
+                : QualitySettings.vSyncCount > 0 ? QualitySettings.vSyncCount / (float)Screen.currentResolution.refreshRateRatio.value
+                : Application.targetFrameRate > 0 ? 1.0f / Application.targetFrameRate
+                : 0.016f;
+            Debug.Log(dt);
+            timeount -= dt;
+            //timeount -= Time.timeScale > 0.0f ? Time.deltaTime : deltaTime;
             if (timeount <= 0f)
             {
                 content.SetActive(false);

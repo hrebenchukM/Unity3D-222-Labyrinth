@@ -8,9 +8,28 @@ public class PlayerScript : MonoBehaviour
     private InputAction moveAction;
     public static int batteryCount = 0;
 
+    private static PlayerScript prevInstance = null;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+
+        if (prevInstance != null)
+        {
+            //GameObject.Destroy(this.gameObject);
+
+            this.rb.linearVelocity = prevInstance.rb.linearVelocity;
+            this.rb.angularVelocity = prevInstance.rb.angularVelocity;
+            GameObject.Destroy(prevInstance.gameObject);
+            prevInstance = this;
+        }
+        else
+        {
+            prevInstance = this;
+        }
+
+
         moveAction = InputSystem.actions.FindAction("Move");
     }
 

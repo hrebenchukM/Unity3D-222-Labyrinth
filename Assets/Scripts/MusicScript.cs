@@ -3,10 +3,29 @@ using UnityEngine;
 public class MusicScript : MonoBehaviour
 {
     private AudioSource music;
-    
+
+
+    private static MusicScript prevInstance = null;
+    void Awake()
+    {
+        if (prevInstance != null && prevInstance != this)
+        {
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
+        else
+        {
+            prevInstance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
+
     void Start()
     {
+
+
         music = GetComponent<AudioSource>();
+
         GameState.AddListener(OnGameStateChanged);
     }
 
