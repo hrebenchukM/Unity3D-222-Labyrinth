@@ -136,7 +136,7 @@ public class MenuScript : MonoBehaviour
     }
     public void OnMuteChanged(bool isMuted)
     {
-        if (! muteToggle.isOn)
+        if (isMuted)
         {
             GameState.musicVolume = 0f;
             GameState.effectsVolume = 0f;

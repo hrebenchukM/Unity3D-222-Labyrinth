@@ -39,15 +39,18 @@ public class GatesScript : MonoBehaviour
             }
         }
 
-        if (openingSound1 != null && openingSound1.isPlaying || openingSound2 != null && openingSound2.isPlaying)
-        {
-            if (openingSound1 != null) openingSound1.volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
-            if (openingSound2 != null) openingSound2.volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+        float volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+        if (openingSound1 != null) openingSound1.volume = volume;
+        if (openingSound2 != null) openingSound2.volume = volume;
+        //if (openingSound1 != null && openingSound1.isPlaying || openingSound2 != null && openingSound2.isPlaying)
+        //{
+        //    if (openingSound1 != null) openingSound1.volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
+        //    if (openingSound2 != null) openingSound2.volume = Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume;
 
-            //openingSound1.volume = openingSound2.volume =
-            //    Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume
-            //;
-        }
+        //    //openingSound1.volume = openingSound2.volume =
+        //    //    Time.timeScale == 0.0f ? 0.0f : GameState.effectsVolume
+        //    //;
+        //}
 
     }
     private void OnCollisionEnter(Collision collision)
@@ -82,11 +85,13 @@ public class GatesScript : MonoBehaviour
                     {
                         (isKeyInTime ? openingSound1 : openingSound2).Play();
                     }
-                    else if (openingSound1 != null && openingSound1.enabled)
+                    else if (openingSound1 != null && openingSound1.enabled &&
+                         openingSound2 == null)
                     {
                         openingSound1.Play();
                     }
-                    else if (openingSound2 != null && openingSound2.enabled)
+                    else if (openingSound2 != null && openingSound2.enabled &&
+                         openingSound1 == null)
                     { 
                          openingSound2.Play();
                     }
