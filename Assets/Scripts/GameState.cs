@@ -24,6 +24,22 @@ public class GameState : MonoBehaviour
     }
     #endregion
 
+    #region float singleEffectsVolume
+    private static float _singleEffectsVolume = 0.073f;
+    public static float singleEffectsVolume
+    {
+        get => _singleEffectsVolume;
+        set
+        {
+            if (_singleEffectsVolume != value)
+            {
+                _singleEffectsVolume = value;
+                Notify(nameof(singleEffectsVolume));
+            }
+        }
+    }
+    #endregion
+
     #region float musicVolume
     private static float _musicVolume = 0.008f;
     public static float musicVolume

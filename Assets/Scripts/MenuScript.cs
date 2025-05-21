@@ -10,19 +10,23 @@ public class MenuScript : MonoBehaviour
     private GameObject content;
     private Slider musicSlider;
     private Slider effectsSlider;
+    private Slider singleEffectsSlider;
     private Toggle muteToggle;
 
     private float defaultMusicVolume;
     private float defaultEffectsVolume;
+    private float defaultSingleEffectVolume;
     private bool defaultIsMuted;
     void Start()
     {
         defaultEffectsVolume = GameState.effectsVolume;
         defaultMusicVolume = GameState.musicVolume;
+        defaultSingleEffectVolume = GameState.singleEffectsVolume;
 
         content = transform.Find("Content").gameObject;
         musicSlider = transform.Find("Content/Sounds/MusicSlider").GetComponent<Slider>();
         effectsSlider = transform.Find("Content/Sounds/EffectsSlider").GetComponent<Slider>();
+        singleEffectsSlider = transform.Find("Content/Sounds/SingleEffectsSlider").GetComponent<Slider>();
         muteToggle = transform.Find("Content/Sounds/MuteToggle").GetComponent<Toggle>();
         _batteryCountText = transform.Find("Content/BatteryImage/Title").GetComponent<TMPro.TextMeshProUGUI>();
         defaultIsMuted = muteToggle.isOn;
@@ -58,6 +62,16 @@ public class MenuScript : MonoBehaviour
         {
             effectsSlider.value = GameState.effectsVolume;
         }
+        if (PlayerPrefs.HasKey(nameof(GameState.singleEffectsVolume)))
+        {
+            singleEffectsSlider.value = GameState.singleEffectsVolume =
+                PlayerPrefs.GetFloat(nameof(GameState.singleEffectsVolume));
+        }
+        else
+        {
+            singleEffectsSlider.value = GameState.singleEffectsVolume;
+        }
+
     }
     void Update()
     {
@@ -115,11 +129,14 @@ public class MenuScript : MonoBehaviour
     public void OnDefaultsClick()
     {
         muteToggle.isOn = defaultIsMuted;
+
+        singleEffectsSlider.value = defaultSingleEffectVolume;
         effectsSlider.value =  defaultEffectsVolume;
         GameState.effectsVolume = muteToggle ? 0.0f : defaultEffectsVolume;
         musicSlider.value = defaultMusicVolume;
         GameState.musicVolume = muteToggle ? 0.0f : defaultMusicVolume;
 
+        GameState.singleEffectsVolume = muteToggle ? 0.0f : defaultSingleEffectVolume;
 
     }
     public void OnContinueClick()
@@ -129,6 +146,10 @@ public class MenuScript : MonoBehaviour
     public void OnEffectsVolumeChanged(float volume)
     {
         if(!muteToggle.isOn) GameState.effectsVolume = volume;
+    }
+    public void OnSingleEffectVolumeChanged(float volume)
+    {
+        if (!muteToggle.isOn) GameState.singleEffectsVolume = volume;
     }
     public void OnMusicVolumeChanged(float volume)
     {
@@ -140,11 +161,13 @@ public class MenuScript : MonoBehaviour
         {
             GameState.musicVolume = 0f;
             GameState.effectsVolume = 0f;
+            GameState.singleEffectsVolume = 0f;
         }
         else
         {
             GameState.musicVolume = musicSlider.value;
             GameState.effectsVolume = effectsSlider.value;
+            GameState.singleEffectsVolume = singleEffectsSlider.value;
         }
 
     }
@@ -153,6 +176,7 @@ public class MenuScript : MonoBehaviour
     {
         PlayerPrefs.SetFloat(nameof(GameState.musicVolume), musicSlider.value);
         PlayerPrefs.SetFloat(nameof(GameState.effectsVolume), effectsSlider.value);
+        PlayerPrefs.SetFloat(nameof(GameState.singleEffectsVolume), singleEffectsSlider.value);
         PlayerPrefs.SetInt(nameof(muteToggle), muteToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();
     }

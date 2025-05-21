@@ -19,13 +19,13 @@ public class EffectsScript : MonoBehaviour
     }
     private void OnGameStateChanged(string fieldName)
     {
-        if (fieldName == nameof(GameState.effectsVolume))
+        if (fieldName == nameof(GameState.singleEffectsVolume))
         {
-            keyCollectSound.volume = GameState.effectsVolume;
-            batteryCollectSound.volume = GameState.effectsVolume;
-            keyCollectOutOfTimeSound.volume = GameState.effectsVolume;
-
+            keyCollectSound.volume = GameState.singleEffectsVolume;
+            batteryCollectSound.volume = GameState.singleEffectsVolume;
+            keyCollectOutOfTimeSound.volume = GameState.singleEffectsVolume;
         }
+
 
     }
     private void OnGameEvent(GameEvent gameEvent)
