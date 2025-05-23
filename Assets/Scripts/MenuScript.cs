@@ -32,6 +32,7 @@ public class MenuScript : MonoBehaviour
         defaultIsMuted = muteToggle.isOn;
 
         LoadPreferences();
+       
         OnMuteChanged(muteToggle.isOn);
 
         Hide();
@@ -132,11 +133,11 @@ public class MenuScript : MonoBehaviour
 
         singleEffectsSlider.value = defaultSingleEffectVolume;
         effectsSlider.value =  defaultEffectsVolume;
-        GameState.effectsVolume = muteToggle ? 0.0f : defaultEffectsVolume;
+        GameState.effectsVolume = muteToggle.isOn ? 0.0f : defaultEffectsVolume;
         musicSlider.value = defaultMusicVolume;
-        GameState.musicVolume = muteToggle ? 0.0f : defaultMusicVolume;
+        GameState.musicVolume = muteToggle.isOn ? 0.0f : defaultMusicVolume;
 
-        GameState.singleEffectsVolume = muteToggle ? 0.0f : defaultSingleEffectVolume;
+        GameState.singleEffectsVolume = muteToggle.isOn ? 0.0f : defaultSingleEffectVolume;
 
     }
     public void OnContinueClick()
@@ -180,4 +181,7 @@ public class MenuScript : MonoBehaviour
         PlayerPrefs.SetInt(nameof(muteToggle), muteToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();
     }
+  
+
+
 }
